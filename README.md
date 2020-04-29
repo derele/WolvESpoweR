@@ -16,7 +16,7 @@ variation between wolf individuals to 1.3-fold (rate ratio).
 
 The results show... 
 
-[Figure 1](https://github.com/derele/WolvESpoweR/blob/master/figures/Sex_power.png)
+![Figure 1](https://github.com/derele/WolvESpoweR/blob/master/figures/Sex_power.png)
 
 
 
