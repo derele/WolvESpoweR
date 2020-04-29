@@ -4,10 +4,10 @@ library(lmerTest)
 library(parallel)
 library(reshape2)
 library(pheatmap)
-library(ggplot2)
+library(gridExtra)
+library(tidyr)
 
-set.seed(121121) # set seed for random number generator to give repeatable results
-
+set.seed(123) 
 
 simulate.wolfData <- function(sample.size, effMF, effDens){
     wolfData <- expand.grid(prey.sex=c("F", "M"),
@@ -38,9 +38,7 @@ simulate.wolfData <- function(sample.size, effMF, effDens){
                      ), 
             rand.V =
                 inv.mor(
-                    c(## row.id = 2,   # the overdispersion median
-                                    # rate ratio (MRR) is 2
-                      location = 1.3,# there is 30%variation in
+                    c(location = 1.3, # there is 30%variation in
                       wolf = 1.3)),   # abundance between packs and 30% between wolves
             distribution = "poisson") # we are simulating a
                                         # Poisson response (count
@@ -53,15 +51,13 @@ simulate.wolfData <- function(sample.size, effMF, effDens){
 ssizes <- c(500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000)
 names(ssizes) <- paste0("size_", ssizes)
 
-## location effect size: female same (1) up to 2-fold more in prey 
-loc <- seq(1, 1.5, by=0.05)
-names(loc) <- paste0("loc_", loc)
+n.reps <- 100
 
-## plain sex effect size: female same (1) up to 2-fold more in prey 
+## Sex ####################################
+
+## plain sex effect size: female same (1) or up to 1.5-fold more in prey 
 sex <- seq(1, 1.5, by=0.05)
 names(sex) <- paste0("sex_", sex)
-
-n.reps <- 100
 
 sex.p <- mclapply(ssizes, function(s.size){
     mclapply(sex, function(sexEff){
@@ -79,6 +75,43 @@ sex.p <- mclapply(ssizes, function(s.size){
 }, mc.cores=7)
 
 
+
+powerS <- melt(sex.p)
+
+names(powerS) <- c("power", "effSizeSex", "sampleSize")
+
+powerS$effSizeSex <- as.numeric(gsub("sex_", "", powerS$effSizeSex))
+
+powerS$effSizeSex <- factor(paste0((powerS$effSizeSex), "*"),
+                            levels=unique(paste0((powerS$effSizeSex), "*")))
+
+powerS$sampleSize <- as.factor(as.numeric(gsub("size_" ,"", powerS$sampleSize)))
+
+powerS  <- spread(powerS, effSizeSex, power)
+
+rownames(powerS) <- powerS$sampleSize
+
+powerS$sampleSize <- NULL
+
+sexPheat <- pheatmap(powerS, cluster_rows=FALSE, cluster_cols=FALSE,
+                     main = paste("Proportion of false negative findings for\n",
+                                  "deviations in prey sex from 50%"))
+
+png("figures/Sex_power.png", width=5, height=5, units = 'in', res = 300)
+grid.arrange(grobs = list(sexPheat[[4]]),
+             ## list(sexPheat[[4]][-3,]) for removing legend?
+             right = textGrob("Sample size",  rot=270),
+             bottom = textGrob(paste0("Rate ratio for female over male prey\n", 
+                                      "(fold increase of female onver male)")))
+dev.off()
+
+
+
+## Location ################################ location effect size:
+## female same (1) up to 2-fold more in prey for low density regions
+loc <- seq(1, 2, by=0.1)
+names(loc) <- paste0("loc_", loc)
+
 loc.p <- mclapply(ssizes, function(s.size){
     mclapply(loc, function(locEff){
         reps <- sapply(1:n.reps, function (i){
@@ -94,99 +127,19 @@ loc.p <- mclapply(ssizes, function(s.size){
 }, mc.cores=7)
 
 
-## Sex
-powerS <- melt(sex.p)
 
-names(powerS) <- c("power", "effSizeSex", "sampleSize")
-
-powerS$effSizeSex <- as.numeric(gsub("sex_", "", powerS$effSizeSex))
-
-powerS$effSizeSex <- factor(paste0((powerS$effSizeSex-1)*100, "%"),
-                            levels=unique(paste0((powerS$effSizeSex-1)*100, "%")))
-
-powerS$sampleSize <- as.factor(as.numeric(gsub("size_" ,"", powerS$sampleSize)))
-
-powerS  <- spread(powerS, effSizeSex, power)
-
-rownames(powerS) <- powerS$sampleSize
-
-powerS$sampleSize <- NULL
-
-sexPheat <- pheatmap(powerS, cluster_rows=FALSE, cluster_cols=FALSE,
-                     main = paste("Proportion of false negative findings for\n",
-                                  "deviations in prey sex from 50%"))
-
-pdf("Sex_power.pdf", width=5, height=5)
-grid.arrange(grobs = list(sexPheat[[4]]),
-             ## list(sexPheat[[4]][-3,]) for removing legend?
-             right = textGrob("Sample size",  rot=270),
-             bottom = textGrob(paste0("Rate ratio for female over male prey\n", 
-                                      "(fold increase of female over male)")))
-dev.off()
-
-
-
-## Location
 powerL <- melt(loc.p)
 
 names(powerL) <- c("power", "effSizeLoc", "sampleSize")
 
 powerL$effSizeLoc <- as.numeric(gsub("loc_", "", powerL$effSizeLoc))
 
-powerL$effSizeLoc <- factor(paste0((powerL$effSizeLoc-1)*100, "%"),
-                            levels=unique(paste0((powerL$effSizeLoc-1)*100, "%")))
+powerL$effSizeLoc <- factor(paste0((powerL$effSizeLoc), "*"),
+                            levels=unique(paste0((powerL$effSizeLoc), "*")))
 
 powerL$sampleSize <- as.factor(as.numeric(gsub("size_" ,"", powerL$sampleSize)))
 
 powerL  <- spread(powerL, effSizeLoc, power)
 
 
-
-foo <- lapply(levels(powerA$sampleSize), function(ssize){
-
-    dplyr::filter(powerA, fixedEff=="sex"&sampleSize==ssize) %>%
-        dplyr::select(matches(c("%|effSizeSex"))) -> powerSex
-
-    rownames(powerSex) <- powerSex$effSizeSex
-
-    powerSex$effSizeSex <- NULL
-
-    title <- paste("Proportion of false negative finding",
-                   "for general prey sex effect at sample size",
-                   ssize)
-    
-    pheatmap(powerSex, cluster_rows=FALSE, cluster_cols=FALSE,
-             main=title, legend=FALSE)
-
-})
-
-
-
-
-
-bar <- lapply(levels(powerA$sampleSize), function(ssize){
-
-    dplyr::filter(powerA, fixedEff=="location"&sampleSize==ssize) %>%
-        dplyr::select(matches(c("%|effSizeSex"))) -> powerLoc
-
-    rownames(powerLoc) <- powerLoc$effSizeSex
-
-    powerLoc$effSizeSex <- NULL
-
-    title <- paste("Proportion of false negative finding",
-                   "for wolf density effect at sample size",
-                   ssize)
-    
-    pheatmap(powerLoc, cluster_rows=FALSE, cluster_cols=FALSE,
-             main=title, legend=FALSE)
-
-
-pdf("Loc_power.pdf", width=6.5, height=20)
-grid.arrange(grobs = lapply(bar, "[[", 4),
-             right = textGrob("Effect size (odds ratio) for sex differences",
-                              rot=90),
-             bottom = textGrob(paste0("Effect size for differences between\n", 
-                                      "high and low wolf abuncance regions")
-             ))
-dev.off()
-
+png("figures/Loc_power.png", width=5, height=5, units = 'in', res = 300)
