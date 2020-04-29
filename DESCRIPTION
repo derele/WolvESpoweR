@@ -22,3 +22,7 @@ Depends:
 Remotes:
     pcdjohnson/GLMMmisc
 RoxygenNote: 7.0.0
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
