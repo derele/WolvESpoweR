@@ -102,7 +102,7 @@ grid.arrange(grobs = list(sexPheat[[4]]),
              ## list(sexPheat[[4]][-3,]) for removing legend?
              right = textGrob("Sample size",  rot=270),
              bottom = textGrob(paste0("Rate ratio for female over male prey\n", 
-                                      "(fold increase of female onver male)")))
+                                      "(fold increase of female over male)")))
 dev.off()
 
 
@@ -156,6 +156,6 @@ grid.arrange(grobs = list(locPheat[[4]]),
              ## list(sexPheat[[4]][-3,]) for removing legend?
              right = textGrob("Sample size",  rot=270),
              bottom = textGrob(paste0("Rate ratio for female over male prey\n", 
-                                      "(fold increase of female onver male)")))
+                                      "(fold increase of female over male)")))
 
 dev.off()
