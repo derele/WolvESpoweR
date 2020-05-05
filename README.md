@@ -24,22 +24,22 @@ The results (Figure 1) show that 2000 samples of a particular prey
 species would allow us to detect a 1.2-fold increase in female
 prey. We propose 2000 samples in the application. If a quarter of
 those samples would have a focal prey species represented we could
-still detect a deviation from 1.35-fold female increase with
-sufficient power.
+still detect a 1.35-fold increase in female prey with sufficient
+power.
 
 ![Figure 1](https://github.com/derele/WolvESpoweR/blob/master/figures/Sex_power.png)
 
 ## Location data 
 
-We assigned 7 of the 14 locations to a "low-prevalence wolf" category,
-the other 7 to a high wolf prevalence category. We used the same
+We assigned 7 of the 14 locations to low wolf prevalence category, the
+other 7 to a high wolf prevalence category. We used the same
 statistical models to analyze the power to detect a wolf density
 effect. We found that sample size has a lower impact on this, as,
 quite obviously, replication across different locations is more
 important for this factor. In a more sophisticated analysis we foresee
 for the actual data analysis it should be possible to use wolf density
-as a continuous variable allowing for more power. The analysis
-preliminary as performed here indicated adequate power to detect
-1.8-fold increase in female prey in low-density wolf areas.
+as a continuous variable allowing for more power. The preliminary
+analysis performed here indicated adequate power to detect 1.8-fold
+increase in female prey in low-density wolf areas.
 
 ![Figure 2](https://github.com/derele/WolvESpoweR/blob/master/figures/Loc_power.png)
