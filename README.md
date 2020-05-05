@@ -31,11 +31,15 @@ sufficient power.
 
 ## Location data 
 
-We assigned 7 of the 14 locations in a "low-prevalence wolf" category
-the other 7 i a high wolf prevalence category. We used the same
-statistical models to analyze the the power to detect a wolf density
+We assigned 7 of the 14 locations to a "low-prevalence wolf" category,
+the other 7 to a high wolf prevalence category. We used the same
+statistical models to analyze the power to detect a wolf density
 effect. We found that sample size has a lower impact on this, as,
 quite obviously, replication across different locations is more
-important for this factor. 
+important for this factor. In a more sophisticated analysis we foresee
+for the actual data analysis it should be possible to use wolf density
+as a continuous variable allowing for more power. The analysis
+preliminary as performed here indicated adequate power to detect
+1.8-fold increase in female prey in low-density wolf areas.
 
 ![Figure 2](https://github.com/derele/WolvESpoweR/blob/master/figures/Loc_power.png)
