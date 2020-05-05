@@ -11,7 +11,7 @@ set.seed(123)
 
 simulate.wolfData <- function(sample.size, effMF, effDens){
     wolfData <- expand.grid(prey.sex=c("F", "M"),
-                            location=letters[1:10],
+                            location=letters[1:14],
                             wolf=1:20)
 
     wolfData$wolf <- paste0(wolfData$location, wolfData$wolf)
@@ -141,5 +141,21 @@ powerL$sampleSize <- as.factor(as.numeric(gsub("size_" ,"", powerL$sampleSize)))
 
 powerL  <- spread(powerL, effSizeLoc, power)
 
+rownames(powerL) <- powerL$sampleSize
+
+powerL$sampleSize <- NULL
+
+
+locPheat <- pheatmap(powerL, cluster_rows=FALSE, cluster_cols=FALSE,
+                     main = paste("Proportion of false negative findings for\n",
+                                  "deviations in prey sex from 50% at 5 of 10 locations"))
 
 png("figures/Loc_power.png", width=5, height=5, units = 'in', res = 300)
+
+grid.arrange(grobs = list(locPheat[[4]]),
+             ## list(sexPheat[[4]][-3,]) for removing legend?
+             right = textGrob("Sample size",  rot=270),
+             bottom = textGrob(paste0("Rate ratio for female over male prey\n", 
+                                      "(fold increase of female onver male)")))
+
+dev.off()
