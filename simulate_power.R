@@ -148,7 +148,7 @@ powerL$sampleSize <- NULL
 
 locPheat <- pheatmap(powerL, cluster_rows=FALSE, cluster_cols=FALSE,
                      main = paste("Proportion of false negative findings for\n",
-                                  "deviations in prey sex from 50% at 5 of 10 locations"))
+                                  "deviations in prey sex at 7 of 14 locations"))
 
 png("figures/Loc_power.png", width=5, height=5, units = 'in', res = 300)
 
