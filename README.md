@@ -31,8 +31,8 @@ power.
 
 ## Location data 
 
-We assigned 7 of the 14 locations to low wolf prevalence category, the
-other 7 to a high wolf prevalence category. We used the same
+We assigned 7 of the 14 locations to low wolf density category, the
+other 7 to a high wolf density category. We used the same
 statistical models to analyze the power to detect a wolf density
 effect. We found that sample size has a lower impact on this, as,
 quite obviously, replication across different locations is more
