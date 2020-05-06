@@ -4,7 +4,7 @@
 ## General setup 
 
 We simulated data for 20 wolves at 14 different locations. Sample size
-is uniformly distributed over these (potentially) 200 animals (some
+is uniformly distributed over these (potentially) 280 animals (some
 will be unsampled at low overall sampling sizes).
 
 ## Sex data

@@ -51,7 +51,7 @@ simulate.wolfData <- function(sample.size, effMF, effDens){
 ssizes <- c(500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000)
 names(ssizes) <- paste0("size_", ssizes)
 
-n.reps <- 100
+n.reps <- 1000
 
 ## Sex ####################################
 
